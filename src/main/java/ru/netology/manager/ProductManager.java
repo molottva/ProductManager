@@ -51,4 +51,22 @@ public class ProductManager {
     public boolean matches(Product product, String searchInput) {
         return product.getTitle().toUpperCase().contains(searchInput.toUpperCase());
     }
+
+    //поиск через rich model
+    public Product[] searchByTitleRichModel(String searchInput) {
+        Product[] results = new Product[0];
+        for (Product product : repository.findAll()) {
+            if (matchesRichModel(product, searchInput)) {
+                Product[] tmp = new Product[results.length + 1];
+                System.arraycopy(results, 0, tmp, 0, results.length);
+                tmp[results.length] = product;
+                results = tmp;
+            }
+        }
+        return results;
+    }
+
+    public boolean matchesRichModel(Product product, String searchInput) {
+        return product.matches(searchInput);
+    }
 }

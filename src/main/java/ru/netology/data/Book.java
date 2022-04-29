@@ -12,4 +12,12 @@ public class Book extends Product {
         super(id, title, price);
         this.author = author;
     }
+
+    public boolean matches(String searchInput) {
+        if (super.matches(searchInput)) {
+            return true;
+        } else {
+            return getAuthor().toUpperCase().contains(searchInput.toUpperCase());
+        }
+    }
 }
