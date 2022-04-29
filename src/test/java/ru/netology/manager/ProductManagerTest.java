@@ -203,4 +203,116 @@ class ProductManagerTest {
         Product[] expected = new Product[0];
         assertArrayEquals(expected, managerWithMock.searchByTitle("толстой"));
     }
+
+    //тесты на поиск через rich model
+    @Test
+    void shouldMatchesRichModelTrueTitle() {
+        assertTrue(managerAllProduct.matchesRichModel(smartphoneFive, "galaxy"));
+    }
+
+    @Test
+    void shouldMatchesRichModelFalseTitle() {
+        assertFalse(managerAllProduct.matchesRichModel(smartphoneFive, "iPhone"));
+    }
+
+    @Test
+    void shouldMatchesRichModelTrueFoundAuthor() {
+        assertTrue(managerAllProduct.matchesRichModel(bookOne, "толстой"));
+    }
+
+    @Test
+    void shouldMatchesRichModelFalseFoundAuthor() {
+        assertFalse(managerAllProduct.matchesRichModel(bookOne, "ЛНТолстой"));
+    }
+
+    @Test
+    void shouldMatchesRichModelTrueFoundManufacturer() {
+        assertTrue(managerAllProduct.matchesRichModel(smartphoneTwo, "apple"));
+    }
+
+    @Test
+    void shouldMatchesRichModelFalseFoundManufacturer() {
+        assertFalse(managerAllProduct.matchesRichModel(smartphoneTwo, "Aple"));
+    }
+
+    @Test
+    void shouldSearchRichModelEmptyMock() {
+        Product[] returnedEmpty = new Product[0];
+        doReturn(returnedEmpty).when(repository).findAll();
+        Product[] expected = new Product[0];
+        assertArrayEquals(expected, managerWithMock.searchByTitleRichModel(" "));
+    }
+
+    @Test
+    void shouldSearchRichModelMockWithOneProductFoundOneResult() {
+        Product[] returnedOneProduct = new Product[]{bookTwo};
+        doReturn(returnedOneProduct).when(repository).findAll();
+        Product[] expected = new Product[]{bookTwo};
+        assertArrayEquals(expected, managerWithMock.searchByTitleRichModel("джордж Лукас"));
+    }
+
+    @Test
+    void shouldSearchRichModelMockWithOneProductUnFound() {
+        Product[] returnedOneProduct = new Product[]{bookTwo};
+        doReturn(returnedOneProduct).when(repository).findAll();
+        Product[] expected = new Product[0];
+        assertArrayEquals(expected, managerWithMock.searchByTitleRichModel("Лакас"));
+    }
+
+    @Test
+    void shouldSearchRichModelMockWithAllProductFoundOneResult() {
+        Product[] returnedAllProduct = new Product[]{
+                bookOne,
+                bookTwo,
+                bookThree,
+                bookFour,
+                bookFive,
+                smartphoneOne,
+                smartphoneTwo,
+                smartphoneThree,
+                smartphoneFour,
+                smartphoneFive};
+        doReturn(returnedAllProduct).when(repository).findAll();
+        Product[] expected = new Product[]{bookThree};
+        assertArrayEquals(expected, managerWithMock.searchByTitleRichModel("н.и.костомаров"));
+    }
+
+    @Test
+    void shouldSearchRichModelMockWithAllProductFoundManyResult() {
+        Product[] returnedAllProduct = new Product[]{
+                bookOne,
+                bookTwo,
+                bookThree,
+                bookFour,
+                bookFive,
+                smartphoneOne,
+                smartphoneTwo,
+                smartphoneThree,
+                smartphoneFour,
+                smartphoneFive};
+        doReturn(returnedAllProduct).when(repository).findAll();
+        Product[] expected = new Product[]{
+                smartphoneThree,
+                smartphoneFour,
+                smartphoneFive};
+        assertArrayEquals(expected, managerWithMock.searchByTitleRichModel("samsung"));
+    }
+
+    @Test
+    void shouldSearchRichModelMockWithAllProductUnFound() {
+        Product[] returnedAllProduct = new Product[]{
+                bookOne,
+                bookTwo,
+                bookThree,
+                bookFour,
+                bookFive,
+                smartphoneOne,
+                smartphoneTwo,
+                smartphoneThree,
+                smartphoneFour,
+                smartphoneFive};
+        doReturn(returnedAllProduct).when(repository).findAll();
+        Product[] expected = new Product[0];
+        assertArrayEquals(expected, managerWithMock.searchByTitleRichModel("шзрщту"));
+    }
 }
