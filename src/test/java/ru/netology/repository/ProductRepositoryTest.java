@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import ru.netology.data.Book;
 import ru.netology.data.Product;
 import ru.netology.data.Smartphone;
+import ru.netology.exception.AlreadyExistsException;
 import ru.netology.exception.NotFoundException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -72,6 +73,33 @@ class ProductRepositoryTest {
         int id = 17;
         assertThrows(NotFoundException.class, () -> {
             repository.removeId(id);
+        });
+    }
+
+    //тесты на AlreadyExistsException
+    @Test
+    void shouldAddProductSuccess() {
+        Product bookSix = new Book(11, "Мастер и Маргарита", 1500, "М.А.Булгаков");
+        Product[] expected = new Product[]{
+                bookOne,
+                bookTwo,
+                bookThree,
+                bookFour,
+                bookFive,
+                smartphoneOne,
+                smartphoneTwo,
+                smartphoneThree,
+                smartphoneFour,
+                smartphoneFive,
+                bookSix};
+        repository.addProduct(bookSix);
+        assertArrayEquals(expected, repository.findAll());
+    }
+
+    @Test
+    void shouldAddProductFailed() {
+        assertThrows(AlreadyExistsException.class, () -> {
+            repository.addProduct(bookThree);
         });
     }
 }

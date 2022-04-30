@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.netology.data.Product;
+import ru.netology.exception.AlreadyExistsException;
 import ru.netology.exception.NotFoundException;
 
 @NoArgsConstructor
@@ -14,6 +15,9 @@ public class ProductRepository {
 
     //добавление продукта в конец массива
     public void addProduct(Product addProduct) {
+        if (findById(addProduct.getId()) != null) {
+            throw new AlreadyExistsException("Товар с ID: " + addProduct.getId() + " уже добавлен в репозиторий!!!");
+        }
         Product[] tmp = new Product[products.length + 1];
         System.arraycopy(products, 0, tmp, 0, products.length);
         tmp[products.length] = addProduct;
